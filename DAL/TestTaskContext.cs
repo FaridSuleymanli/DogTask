@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TestTask.Entities.Models;
 
 namespace TestTask.DAL
 {
@@ -12,6 +13,6 @@ namespace TestTask.DAL
         {
 
         }
-
+        public virtual DbSet<Dog> Contacts { get; set; }
     }
 }
