@@ -13,6 +13,6 @@ namespace TestTask.DAL
         {
 
         }
-        public virtual DbSet<Dog> Contacts { get; set; }
+        public virtual DbSet<Dog> Dogs { get; set; }
     }
 }
