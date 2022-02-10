@@ -49,13 +49,20 @@ namespace TestTask.API.Controllers
             var dog = _mapper.Map<Dog, DogsForGetDTO>(await _context.Dogs.FirstOrDefaultAsync(d => d.Id == id));
             if (dog == null)
             {
-                return BadRequest(new { error = "Object with the given {id} was not found"});
+                return BadRequest(new { error = $"Object with the given {id} was not found"});
             }
             return Ok(dog);
         }
 
         [HttpPost]
         [Route("Dog")]
-        public async Task<ActionResult> CreateDog([FromBody])
+        public async Task<ActionResult> CreateDog([FromBody] DogsForCreateDTO dog)
+        {
+            var newDog = _mapper.Map<Dog>(dog);
+
+            await _context.Dogs.AddAsync(newDog);
+            await _context.SaveChangesAsync();
+            return Ok(dog);
+        }
     }
 }

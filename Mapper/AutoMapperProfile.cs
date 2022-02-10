@@ -13,6 +13,7 @@ namespace TestTask.Mapper
         public AutoMapperProfile()
         {
             CreateMap<Dog, DogsForGetDTO>().ReverseMap();
+            CreateMap<DogsForCreateDTO, Dog>().ReverseMap();
         }
     }
 }
