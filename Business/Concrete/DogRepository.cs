@@ -22,9 +22,9 @@ namespace TestTask.Business.Concrete
         }
         public List<Dog> GetAllDogs(string attribute, string order)
         {
-            IEnumerable<DogsForGetDTO> dogs = _mapper.Map<IEnumerable<DogsForGetDTO>>(_context.Dogs.AsQueryable());
+            var dogs = _context.Dogs.AsQueryable();
             #region Sorting
-            dogs = dogs.OrderBy(d => d.Name);
+            dogs = dogs.OrderBy(d => d.Id);
             if (!string.IsNullOrEmpty(attribute) && !string.IsNullOrEmpty(order))
             {
                 if (attribute == "color")
@@ -63,7 +63,7 @@ namespace TestTask.Business.Concrete
                 }
             }
             #endregion
-            throw new NotImplementedException();
+            return dogs.ToList();
         }
     }
 }

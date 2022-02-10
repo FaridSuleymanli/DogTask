@@ -13,6 +13,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using TestTask.DAL;
 using Microsoft.EntityFrameworkCore;
+using TestTask.Business.Abstract;
+using TestTask.Business.Concrete;
 
 namespace TestTask
 {
@@ -35,6 +37,7 @@ namespace TestTask
             {
                 options.UseSqlServer("Server=LAPTOP-375LDOTD;Initial Catalog=TestTask;Integrated Security=sspi;");
             });
+            services.AddScoped<IDogRepository, DogRepository>();
             services.AddAutoMapper(typeof(Startup));
             services.AddCors(options => options.AddDefaultPolicy
             (

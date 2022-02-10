@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using TestTask.Business.Abstract;
 using TestTask.DAL;
 using TestTask.Entities.DTOs;
 using TestTask.Entities.Models;
@@ -18,10 +19,12 @@ namespace TestTask.API.Controllers
     {
         private readonly TestTaskContext _context;
         private readonly IMapper _mapper;
-        public HomeController(TestTaskContext context, IMapper mapper)
+        private readonly IDogRepository _repository;
+        public HomeController(TestTaskContext context, IMapper mapper, IDogRepository repository)
         {
             _context = context;
             _mapper = mapper;
+            _repository = repository;
         }
         [HttpGet]
         [Route("Ping")]
@@ -32,13 +35,14 @@ namespace TestTask.API.Controllers
 
         [HttpGet]
         [Route("Dogs")]
-        public async Task<ActionResult> GetAllDogs()
+        public async Task<ActionResult> GetAllDogs(string attribute, string order)
         {
-            IEnumerable<DogsForGetDTO> dogs = _mapper.Map<IEnumerable<DogsForGetDTO>>(await _context.Dogs.ToListAsync());
-            if (dogs == null)
-            {
-                return NotFound(new { message = "Dog list is empty" });
-            }
+            //IEnumerable<DogsForGetDTO> dogs = _mapper.Map<IEnumerable<DogsForGetDTO>>(await _context.Dogs.ToListAsync());
+            //if (dogs == null)
+            //{
+            //    return NotFound(new { message = "Dog list is empty" });
+            //}
+            var dogs = _repository.GetAllDogs(attribute, order);
             return Ok(dogs);
         }
 
