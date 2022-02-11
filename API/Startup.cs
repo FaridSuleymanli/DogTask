@@ -15,6 +15,7 @@ using TestTask.DAL;
 using Microsoft.EntityFrameworkCore;
 using TestTask.Business.Abstract;
 using TestTask.Business.Concrete;
+using AspNetCoreRateLimit;
 
 namespace TestTask
 {
@@ -30,14 +31,34 @@ namespace TestTask
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // needed to load configuration from appsettings.json
+            services.AddOptions();
 
+            // needed to store rate limit counters and ip rules
+            services.AddMemoryCache();
+
+            //load general configuration from appsettings.json
+            services.Configure<IpRateLimitOptions>(Configuration.GetSection("IpRateLimiting"));
+
+            //load ip rules from appsettings.json
+            services.Configure<IpRateLimitPolicies>(Configuration.GetSection("IpRateLimitPolicies"));
+
+            // inject counter and rules stores
+            services.AddInMemoryRateLimiting();
+
+            // configuration (resolvers, counter key builders)
+            
             services.AddControllers().AddNewtonsoftJson(options =>
             options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore).AddFluentValidation();
+
+            services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
+            services.AddScoped<IDogRepository, DogRepository>();
+
             services.AddDbContext<TestTaskContext>(options =>
             {
                 options.UseSqlServer("Server=LAPTOP-375LDOTD;Initial Catalog=TestTask;Integrated Security=sspi;");
             });
-            services.AddScoped<IDogRepository, DogRepository>();
             services.AddAutoMapper(typeof(Startup));
             services.AddCors(options => options.AddDefaultPolicy
             (
@@ -52,6 +73,8 @@ namespace TestTask
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseIpRateLimiting();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

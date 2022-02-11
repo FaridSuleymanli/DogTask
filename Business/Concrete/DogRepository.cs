@@ -14,13 +14,13 @@ namespace TestTask.Business.Concrete
     {
         private readonly TestTaskContext _context;
         private readonly IMapper _mapper;
-        //public static int PAGE_SIZE { get; set; } = 5;
+        public static int PAGE_SIZE { get; set; } = 5;
         public DogRepository(TestTaskContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
         }
-        public List<Dog> GetAllDogs(string attribute, string order)
+        public List<Dog> GetAllDogs(string attribute, string order, int page = 1)
         {
             var dogs = _context.Dogs.AsQueryable();
             #region Sorting
@@ -63,6 +63,8 @@ namespace TestTask.Business.Concrete
                 }
             }
             #endregion
+            var result = PaginationDTO<Dog>.Create(dogs, page, PAGE_SIZE);
+
             return dogs.ToList();
         }
     }

@@ -8,6 +8,6 @@ namespace TestTask.Business.Abstract
 {
     public interface IDogRepository
     {
-        List<Dog> GetAllDogs(string attribute, string order);
+        List<Dog> GetAllDogs(string attribute, string order, int page = 1);
     }
 }

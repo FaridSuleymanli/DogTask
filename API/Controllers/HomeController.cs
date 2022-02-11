@@ -35,14 +35,14 @@ namespace TestTask.API.Controllers
 
         [HttpGet]
         [Route("Dogs")]
-        public async Task<ActionResult> GetAllDogs(string attribute, string order)
+        public ActionResult GetAllDogs(string attribute, string order, int page = 1)
         {
             //IEnumerable<DogsForGetDTO> dogs = _mapper.Map<IEnumerable<DogsForGetDTO>>(await _context.Dogs.ToListAsync());
             //if (dogs == null)
             //{
             //    return NotFound(new { message = "Dog list is empty" });
             //}
-            var dogs = _repository.GetAllDogs(attribute, order);
+            var dogs = _repository.GetAllDogs(attribute, order, page);
             return Ok(dogs);
         }
 
