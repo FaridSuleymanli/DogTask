@@ -62,6 +62,12 @@ namespace TestTask.API.Controllers
         [Route("Dog")]
         public async Task<ActionResult> CreateDog([FromBody] DogsForCreateDTO dog)
         {
+            var existedDog = await _context.Dogs.FirstOrDefaultAsync(d => d.Name == dog.Name);
+            if (existedDog != null)
+            {
+                return BadRequest(new { error = "Dog with the given name is already exist" });
+            }
+
             var newDog = _mapper.Map<Dog>(dog);
 
             await _context.Dogs.AddAsync(newDog);
